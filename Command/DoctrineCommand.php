@@ -5,7 +5,6 @@ namespace Doctrine\Bundle\DoctrineBundle\Command;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Sharding\PoolingShardConnection;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Tools\EntityGenerator;
 use Doctrine\Persistence\ManagerRegistry;
 use LogicException;
 use Symfony\Component\Console\Command\Command;
@@ -28,13 +27,15 @@ abstract class DoctrineCommand extends Command
     }
 
     /**
-     * get a doctrine entity generator
+     * get a Viva entity generator
      *
-     * @return EntityGenerator
+     * @return \VivaEntityGenerator
      */
     protected function getEntityGenerator()
     {
-        $entityGenerator = new EntityGenerator();
+        require_once '/opt/db-migration/VivaEntityGenerator.php';
+
+        $entityGenerator = new \VivaEntityGenerator();
         $entityGenerator->setGenerateAnnotations(false);
         $entityGenerator->setGenerateStubMethods(true);
         $entityGenerator->setRegenerateEntityIfExists(false);
