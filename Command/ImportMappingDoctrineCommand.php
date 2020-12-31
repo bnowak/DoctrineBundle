@@ -124,6 +124,7 @@ EOT
 
         $databaseDriver = new DatabaseDriver($em->getConnection()->getSchemaManager());
         $em->getConfiguration()->setMetadataDriverImpl($databaseDriver);
+        $entityGenerator::adjustFieldNamesForColumns($databaseDriver);
 
         $emName = $input->getOption('em');
         $emName = $emName ? $emName : 'default';
