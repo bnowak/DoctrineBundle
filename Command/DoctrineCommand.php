@@ -3,11 +3,13 @@
 namespace Doctrine\Bundle\DoctrineBundle\Command;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Schema\PostgreSqlSchemaManager;
 use Doctrine\DBAL\Sharding\PoolingShardConnection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\Persistence\ManagerRegistry;
 use LogicException;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
 /**
  * Base class for Doctrine console commands to extend from.
@@ -35,15 +37,10 @@ abstract class DoctrineCommand extends Command
     {
         require_once '/opt/db-migration/VivaEntityGenerator.php';
 
-        $entityGenerator = new \VivaEntityGenerator();
-        $entityGenerator->setGenerateAnnotations(false);
-        $entityGenerator->setGenerateStubMethods(true);
-        $entityGenerator->setRegenerateEntityIfExists(false);
-        $entityGenerator->setUpdateEntityIfExists(true);
-        $entityGenerator->setNumSpaces(4);
-        $entityGenerator->setAnnotationPrefix('ORM\\');
+        /* @var PostgreSqlSchemaManager $schemaManager */
+        $schemaManager = $this->getDoctrine()->getConnection()->getSchemaManager();
 
-        return $entityGenerator;
+        return new \VivaEntityGenerator($schemaManager);
     }
 
     /**
